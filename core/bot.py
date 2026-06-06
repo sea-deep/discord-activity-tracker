@@ -62,18 +62,23 @@ class ActivityTrackerClient(discord.Client):
         logs = []
         
         a_status_str = str(after.status)
+        desktop = str(getattr(after, 'desktop_status', 'offline'))
+        mobile = str(getattr(after, 'mobile_status', 'offline'))
+        web = str(getattr(after, 'web_status', 'offline'))
+        
+        detailed_status = f"{a_status_str} (💻 {desktop} | 📱 {mobile} | 🌐 {web})"
 
         # 1. Deduplicated Status Tracking
-        if self.current_status != a_status_str:
+        if self.current_status != detailed_status:
             # First time running, don't spam a duration for initialization
             if self.current_status is not None:
                 duration_str = get_duration_string(self.state_times, "status")
-                e_before = get_status_emoji(self.current_status)
+                e_before = get_status_emoji(self.current_status.split()[0]) # Extract main status for emoji
                 e_after = get_status_emoji(a_status_str)
-                logs.append(f"**Status:** {e_before} `{self.current_status}` ➡️ {e_after} `{a_status_str}`{duration_str}")
+                logs.append(f"**Status:** {e_before} `{self.current_status}` ➡️ {e_after} `{detailed_status}`{duration_str}")
             else:
                 self.state_times["status"] = datetime.now(timezone.utc)
-            self.current_status = a_status_str
+            self.current_status = detailed_status
             
         # 2. Deduplicated Activity Diff Tracking
         a_act_strs = []
