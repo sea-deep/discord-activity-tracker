@@ -20,7 +20,7 @@ def get_duration_string(state_times, state_key):
     if minutes > 0: parts.append(f"{minutes}m")
     if seconds > 0 or not parts: parts.append(f"{seconds}s")
     
-    return " `[" + " ".join(parts) + "]`"
+    return " ".join(parts)
 
 def get_status_emoji(status):
     status_str = str(status)
@@ -33,9 +33,13 @@ def get_status_emoji(status):
 def get_activity_string(a):
     if isinstance(a, discord.CustomActivity):
         emoji = f"{a.emoji} " if getattr(a, 'emoji', None) else ""
-        return f"💭 Custom Status: {emoji}{a.name}"
+        return f"💭 **Custom Status:** {emoji}{a.name}"
     elif isinstance(a, discord.Spotify):
-        return f"🎵 Spotify: '{a.title}' by {a.artist} (Album: {a.album})"
+        url = f"https://open.spotify.com/track/{a.track_id}" if getattr(a, 'track_id', None) else ""
+        title = f"[{a.title}]({url})" if url else f"**{a.title}**"
+        main_text = f"🎵 **Spotify:** {title}"
+        sub_text = f"\n-# 👤 {a.artist} • 💿 {a.album}"
+        return f"{main_text}{sub_text}"
     elif hasattr(a, 'type'):
         act_type = getattr(a.type, 'name', 'playing').title()
         name = a.name or "Unknown"
@@ -48,6 +52,10 @@ def get_activity_string(a):
             emoji = "🎧"
         elif type_val == discord.ActivityType.streaming:
             emoji = "📡"
+            
+        url = getattr(a, 'url', None)
+        title = f"[{name}]({url})" if url else f"**{name}**"
+        main_text = f"{emoji} **{act_type}** {title}"
             
         extras = []
         if getattr(a, 'details', None): extras.append(f"Details: {a.details}")
@@ -65,8 +73,8 @@ def get_activity_string(a):
                 extras.append(f"Small Image: {small_text}")
         
         if extras:
-            return f"{emoji} {act_type} {name} | {' | '.join(extras)}"
+            return f"{main_text}\n-# {' • '.join(extras)}"
         else:
-            return f"{emoji} {act_type} {name}"
+            return main_text
     else:
-        return f"🔹 {a.name}"
+        return f"🔹 **{a.name}**"

@@ -73,9 +73,19 @@ class ActivityTrackerClient(discord.Client):
             # First time running, don't spam a duration for initialization
             if self.current_status is not None:
                 duration_str = get_duration_string(self.state_times, "status")
-                e_before = get_status_emoji(self.current_status.split()[0]) # Extract main status for emoji
+                prev_main_status = self.current_status.split()[0]
+                e_before = get_status_emoji(prev_main_status)
                 e_after = get_status_emoji(a_status_str)
-                logs.append(f"**Status:** {e_before} `{self.current_status}` ➡️ {e_after} `{detailed_status}`{duration_str}")
+                
+                log_msg = (
+                    f"### 🔄 Status Update\n"
+                    f"{e_before} **{prev_main_status.title()}** ➡️ {e_after} **{a_status_str.title()}**\n"
+                    f"-# 💻 {desktop} | 📱 {mobile} | 🌐 {web}"
+                )
+                if duration_str:
+                    log_msg += f"  •  ⏱️ {duration_str}"
+                    
+                logs.append(log_msg)
             else:
                 self.state_times["status"] = datetime.now(timezone.utc)
             self.current_status = detailed_status
@@ -96,11 +106,15 @@ class ActivityTrackerClient(discord.Client):
                 duration_str = get_duration_string(self.state_times, "activity")
                 diff_logs = []
                 for act in added:
-                    diff_logs.append(f"> 🟢 **Started:** {act}")
+                    diff_logs.append(f"- 🟢 **Started:** {act}")
                 for act in removed:
-                    diff_logs.append(f"> 🔴 **Stopped:** {act}")
+                    diff_logs.append(f"- 🔴 **Stopped:** {act}")
                     
-                logs.append(f"**Activity Update**{duration_str}\n" + "\n".join(diff_logs))
+                header = "### 🎮 Activity Update"
+                if duration_str:
+                    header += f"\n-# ⏱️ Time since last change: {duration_str}"
+                    
+                logs.append(header + "\n" + "\n".join(diff_logs))
             else:
                 self.state_times["activity"] = datetime.now(timezone.utc)
                 
