@@ -1,1 +1,3 @@
-# Make core a package
+from .bot import ActivityTrackerClient
+
+__all__ = ['ActivityTrackerClient']

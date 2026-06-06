@@ -1,8 +1,7 @@
 import discord
 import asyncio
 from datetime import datetime, timezone
-from utils.logger import logger
-from utils.formatters import get_duration_string, get_status_emoji, get_activity_string
+from utils import logger, get_duration_string, get_status_emoji, get_activity_string
 from config import CHANNEL_ID, LOGGING_FOR
 
 class ActivityTrackerClient(discord.Client):

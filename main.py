@@ -1,7 +1,7 @@
 import asyncio
-from core.bot import ActivityTrackerClient
+from core import ActivityTrackerClient
 from config import TOKEN, CHANNEL_ID, LOGGING_FOR
-from utils.logger import logger
+from utils import logger
 
 async def main():
     if not TOKEN:
