@@ -14,8 +14,14 @@ async def main():
     client = ActivityTrackerClient()
     try:
         await client.start(TOKEN)
-    except KeyboardInterrupt:
-        await client.close()
+    except asyncio.CancelledError:
+        pass
+    finally:
+        if not client.is_closed():
+            await client.close()
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        pass
