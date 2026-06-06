@@ -48,14 +48,20 @@ iframe.remove();
 
 ## Quick Start Guide
 
-### 1. Clone the Repository
+### 1. Open your Terminal
+Before running any commands, you need to open your computer's command line interface:
+* **Windows**: Press `Win + R`, type `powershell`, and press Enter.
+* **macOS**: Press `Cmd + Space`, type `terminal`, and press Enter.
+* **Linux**: Press `Ctrl + Alt + T`.
+
+### 2. Clone the Repository
 Clone this repository to your local machine and navigate to the project directory:
 ```bash
 git clone https://github.com/sea-deep/discord-activity-tracker.git
 cd discord-activity-tracker
 ```
 
-### 2. Set up a Virtual Environment
+### 3. Set up a Virtual Environment
 Create and activate a virtual environment:
 ```bash
 # On Linux/macOS
@@ -67,13 +73,13 @@ python -m venv venv
 .\venv\Scripts\activate
 ```
 
-### 3. Install Dependencies
+### 4. Install Dependencies
 Install the required packages using `pip`:
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Configure Environment Variables
+### 5. Configure Environment Variables
 Rename the included `.env.example` file to `.env` and configure your credentials:
 ```env
 # Your personal Discord User Token
@@ -87,7 +93,7 @@ LOGGING_FOR=987654321098765432
 ```
 *(To get IDs, go to Discord Settings -> Advanced -> Enable "Developer Mode". Right-click a user or channel and click "Copy ID")*
 
-### 5. Run the Tracker
+### 6. Run the Tracker
 Start the script:
 ```bash
 python main.py
